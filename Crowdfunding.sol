@@ -5,10 +5,10 @@ contract CrowdFunding {
     mapping(address => uint) public contributors;
     address public admin;
     uint public noOfContributors;//There is no length(mapping)
-    uint public minimumContributors;
+    uint public minimumContribution;
     uint public deadline;
     uint public goal;
-    uint public raesedAmount;
+    uint public raisedAmount;
 
     struct Request{
         string description;
@@ -27,7 +27,7 @@ contract CrowdFunding {
     event MakePaymentEvent(address _recipient, uint _value);
 
     constructor(uint _goal, uint _deadline) {
-        goal = _gaol;
+        goal = _goal;
         deadline = block.timestamp + _deadline;
         admin = msg.sender;
         minimumContribution = 100 wei;
@@ -42,7 +42,7 @@ contract CrowdFunding {
         require(block.timestamp < deadline);
         require(msg.value >= minimumContribution);
 
-        if(contributors[msg.sender] += msg.value){
+        if(contributors[msg.sender] == 0){
             noOfContributors++;
 
         }
@@ -97,7 +97,7 @@ contract CrowdFunding {
         thisRequest.noOfvoters++;
     }
 
-    function makePayment(uint _requestNo) public onlyAdmin {
+    function makePayment(uint _requestNo) public onlyOwner {
         Request storage thisRequest = requests[_requestNo];
         require(thisRequest.completed == false);
 
@@ -110,4 +110,3 @@ contract CrowdFunding {
 
     }
 }
-
